@@ -5,7 +5,7 @@ import stepper from './stepper';
 import defaultNow from 'performance-now';
 import defaultRaf from 'raf';
 import shouldStopAnimation from './shouldStopAnimation';
-import React from 'react';
+import { Component } from 'preact';
 import PropTypes from 'prop-types';
 
 import type {ReactElement, PlainStyle, Style, Velocity, MotionProps} from './Types';
@@ -19,7 +19,7 @@ type MotionState = {
   lastIdealVelocity: Velocity,
 };
 
-class Motion extends React.Component {
+class Motion extends Component {
 
   state: MotionState;
 
@@ -30,7 +30,8 @@ class Motion extends React.Component {
       PropTypes.number,
       PropTypes.object,
     ])).isRequired,
-    children: PropTypes.func.isRequired,
+    // Preact TODO: check if it's an array containing a single function
+    // children: PropTypes.func.isRequired,
     onRest: PropTypes.func,
   };
 
@@ -229,8 +230,7 @@ class Motion extends React.Component {
   }
 
   render(): ReactElement {
-    const renderedChildren = this.props.children(this.state.currentStyle);
-    return renderedChildren && React.Children.only(renderedChildren);
+    return this.props.children[0](this.state.currentStyle);
   }
 }
 

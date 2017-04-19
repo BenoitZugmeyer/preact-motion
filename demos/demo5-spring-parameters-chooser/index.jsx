@@ -1,5 +1,4 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import { render, h } from 'preact';
 import Demo from './Demo';
 
-ReactDOM.render(<Demo />, document.querySelector('#content'));
+render(<Demo />, document.querySelector('#content'));

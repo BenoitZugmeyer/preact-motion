@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component, h } from 'preact';
 import {Motion, spring} from '../../src/react-motion';
 import range from 'lodash.range';
 
@@ -17,7 +17,7 @@ function clamp(n, min, max) {
 const springConfig = {stiffness: 300, damping: 50};
 const itemsCount = 4;
 
-class Demo extends React.Component {
+class Demo extends Component {
   constructor(props) {
     super(props);
     this.handleTouchMove = this.handleTouchMove.bind(this);

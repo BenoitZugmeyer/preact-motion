@@ -6,7 +6,7 @@ import mergeDiff from './mergeDiff';
 import defaultNow from 'performance-now';
 import defaultRaf from 'raf';
 import shouldStopAnimation from './shouldStopAnimation';
-import React from 'react';
+import { Component } from 'preact';
 import PropTypes from 'prop-types';
 
 import type {
@@ -186,7 +186,7 @@ type TransitionMotionState = {
   mergedPropsStyles: Array<TransitionStyle>,
 };
 
-class TransitionMotion extends React.Component {
+class TransitionMotion extends Component {
   static propTypes = {
     defaultStyles: PropTypes.arrayOf(PropTypes.shape({
       key: PropTypes.string.isRequired,
@@ -204,7 +204,8 @@ class TransitionMotion extends React.Component {
         ])).isRequired,
       }),
     )]).isRequired,
-    children: PropTypes.func.isRequired,
+    // Preact TODO: check if it's an array containing a single function
+    // children: PropTypes.func.isRequired,
     willEnter: PropTypes.func,
     willLeave: PropTypes.func,
     didLeave: PropTypes.func,
@@ -534,8 +535,7 @@ class TransitionMotion extends React.Component {
       this.unreadPropStyles,
       this.state.currentStyles,
     );
-    const renderedChildren = this.props.children(hydratedStyles);
-    return renderedChildren && React.Children.only(renderedChildren);
+    return this.props.children[0](hydratedStyles);
   }
 }
 

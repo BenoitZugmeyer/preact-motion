@@ -1,6 +1,6 @@
-import ReactDOM from 'react-dom';
+import { render } from 'preact';
 
 export default function renderIntoDocument(element) {
   const div = document.createElement('div');
-  ReactDOM.render(element, div);
+  render(element, div);
 }

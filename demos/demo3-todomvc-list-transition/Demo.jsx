@@ -1,7 +1,7 @@
-import React from 'react';
+import { Component, h } from 'preact';
 import {TransitionMotion, spring, presets} from '../../src/react-motion';
 
-class Demo extends React.Component {
+class Demo extends Component {
   constructor(props) {
     super(props);
     this.handleChange = this.handleChange.bind(this);

@@ -5,7 +5,7 @@ import stepper from './stepper';
 import defaultNow from 'performance-now';
 import defaultRaf from 'raf';
 import shouldStopAnimation from './shouldStopAnimation';
-import React from 'react';
+import { Component } from 'preact';
 import PropTypes from 'prop-types';
 
 import type {ReactElement, PlainStyle, Style, Velocity, StaggeredProps} from './Types';
@@ -32,13 +32,14 @@ function shouldStopAnimationAll(
   return true;
 }
 
-class StaggeredMotion extends React.Component {
+class StaggeredMotion extends Component {
 
   static propTypes = {
     // TOOD: warn against putting a config in here
     defaultStyles: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.number)),
     styles: PropTypes.func.isRequired,
-    children: PropTypes.func.isRequired,
+    // Preact TODO: check if it's an array containing a single function
+    // children: PropTypes.func.isRequired,
   }
 
   state: StaggeredMotionState;
@@ -249,8 +250,7 @@ class StaggeredMotion extends React.Component {
   }
 
   render(): ReactElement {
-    const renderedChildren = this.props.children(this.state.currentStyles);
-    return renderedChildren && React.Children.only(renderedChildren);
+    return this.props.children[0](this.state.currentStyles);
   }
 }
 

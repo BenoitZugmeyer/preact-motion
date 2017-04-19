@@ -1,10 +1,10 @@
-import React from 'react';
+import { Component, h } from 'preact';
 import {Motion, spring} from '../../src/react-motion';
 
 const springSettings = {stiffness: 170, damping: 26};
 const NEXT = 'show-next';
 
-class Demo extends React.Component {
+class Demo extends Component {
   constructor(props) {
     super(props);
     this.handleChange = this.handleChange.bind(this);

@@ -1,8 +1,8 @@
-import React from 'react';
+import { Component, h } from 'preact';
 import {StaggeredMotion, spring, presets} from '../../src/react-motion';
 import range from 'lodash.range';
 
-class Demo extends React.Component {
+class Demo extends Component {
   constructor(props) {
     super(props);
     this.handleMouseMove = this.handleMouseMove.bind(this);

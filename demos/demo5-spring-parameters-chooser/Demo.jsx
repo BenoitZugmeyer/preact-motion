@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component, h } from 'preact';
 import {Motion, spring} from '../../src/react-motion';
 import range from 'lodash.range';
 
@@ -6,7 +6,7 @@ const gridWidth = 150;
 const gridHeight = 150;
 const grid = range(4).map(() => range(6));
 
-class Demo extends React.Component {
+class Demo extends Component {
   constructor(props) {
     super(props);
     this.handleMouseMove = this.handleMouseMove.bind(this);

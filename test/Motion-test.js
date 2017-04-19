@@ -1,7 +1,9 @@
-import React from 'react';
+import {Component, h, options} from 'preact';
 import {spring} from '../src/react-motion';
 import createMockRaf from './createMockRaf';
 import renderIntoDocument from './renderIntoDocument';
+
+options.debounceRendering = (fn) => fn();
 
 const {createSpy} = global.jasmine;
 
@@ -143,7 +145,7 @@ describe('Motion', () => {
   it('should not throw on unmount', () => {
     spyOn(console, 'error');
     let kill = () => {};
-    class App extends React.Component {
+    class App extends Component {
       constructor(props) {
         super(props);
         this.state = {kill: false};
@@ -325,7 +327,7 @@ describe('Motion', () => {
   it('should support jumping to value', () => {
     let count = [];
     let setState = () => {};
-    class App extends React.Component {
+    class App extends Component {
       constructor(props) {
         super(props);
         this.state = {p: false};
@@ -443,7 +445,7 @@ describe('Motion', () => {
 
     let setState;
 
-    class App extends React.Component {
+    class App extends Component {
       constructor(props) {
         super(props);
         this.state = {a: spring(0)};
@@ -475,7 +477,7 @@ describe('Motion', () => {
   it('should behave well when many owner updates come in-between rAFs', () => {
     let count = [];
     let setState = () => {};
-    class App extends React.Component {
+    class App extends Component {
       constructor(props) {
         super(props);
         this.state = {a: spring(0)};
@@ -485,7 +487,7 @@ describe('Motion', () => {
       }
       render() {
         return (
-          <Motion style={this.state}>
+          <Motion style={Object.assign({}, this.state)}>
             {a => {
               count.push(a);
               return null;

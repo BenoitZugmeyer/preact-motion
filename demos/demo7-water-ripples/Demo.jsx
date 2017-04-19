@@ -1,8 +1,8 @@
-import React from 'react';
+import { Component, h } from 'preact';
 import {TransitionMotion, spring} from '../../src/react-motion';
 
 const leavingSpringConfig = {stiffness: 60, damping: 15};
-class Demo extends React.Component {
+class Demo extends Component {
   constructor(props) {
     super(props);
     this.handleMouseMove = this.handleMouseMove.bind(this);
