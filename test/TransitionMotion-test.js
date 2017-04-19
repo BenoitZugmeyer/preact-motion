@@ -2,7 +2,7 @@ import React from 'react';
 import createReactClass from 'create-react-class';
 import {spring} from '../src/react-motion';
 import createMockRaf from './createMockRaf';
-import TestUtils from 'react-addons-test-utils';
+import renderIntoDocument from './renderIntoDocument';
 
 const injector = require('inject!../src/TransitionMotion');
 
@@ -25,7 +25,7 @@ describe('TransitionMotion', () => {
         return <TransitionMotion styles={[{key: '1', style: {}}]}>{() => null}</TransitionMotion>;
       },
     });
-    TestUtils.renderIntoDocument(<App />);
+    renderIntoDocument(<App />);
   });
 
   it('should not throw on unmount', () => {
@@ -48,7 +48,7 @@ describe('TransitionMotion', () => {
             </TransitionMotion>;
       },
     });
-    TestUtils.renderIntoDocument(<App />);
+    renderIntoDocument(<App />);
     mockRaf.step(2);
     kill();
     mockRaf.step(3);
@@ -76,7 +76,7 @@ describe('TransitionMotion', () => {
             </TransitionMotion>;
       },
     });
-    TestUtils.renderIntoDocument(<App />);
+    renderIntoDocument(<App />);
     mockRaf.step(2);
     kill();
     mockRaf.step(3);
@@ -100,7 +100,7 @@ describe('TransitionMotion', () => {
       },
     });
 
-    TestUtils.renderIntoDocument(<App />);
+    renderIntoDocument(<App />);
 
     expect(count).toEqual([{a: 0}]);
     mockRaf.step(4);
@@ -131,7 +131,7 @@ describe('TransitionMotion', () => {
         );
       },
     });
-    TestUtils.renderIntoDocument(<App />);
+    renderIntoDocument(<App />);
 
     mockRaf.step(99);
     expect(count).toEqual([
@@ -170,7 +170,7 @@ describe('TransitionMotion', () => {
       },
     });
 
-    TestUtils.renderIntoDocument(<App />);
+    renderIntoDocument(<App />);
 
     expect(count).toEqual([[
       {key: '1', style: {a: 0, b: 10}, data: undefined},
@@ -227,7 +227,7 @@ describe('TransitionMotion', () => {
         );
       },
     });
-    TestUtils.renderIntoDocument(<App />);
+    renderIntoDocument(<App />);
 
     expect(count).toEqual([]);
     setState({
@@ -264,7 +264,7 @@ describe('TransitionMotion', () => {
         );
       },
     });
-    TestUtils.renderIntoDocument(<App />);
+    renderIntoDocument(<App />);
 
     expect(count).toEqual([
       {x: 0},
@@ -312,7 +312,7 @@ describe('TransitionMotion', () => {
         );
       },
     });
-    TestUtils.renderIntoDocument(<App />);
+    renderIntoDocument(<App />);
 
     expect(count).toEqual([0]);
     // Move "time" until we reach the final styles value
@@ -349,7 +349,7 @@ describe('TransitionMotion', () => {
         );
       },
     });
-    TestUtils.renderIntoDocument(<App />);
+    renderIntoDocument(<App />);
 
     expect(count).toEqual([{x: 0}]);
     setState({p: true});
@@ -403,7 +403,7 @@ describe('TransitionMotion', () => {
         );
       },
     });
-    TestUtils.renderIntoDocument(<App />);
+    renderIntoDocument(<App />);
 
     expect(count).toEqual([[{key: '1', style: {x: 0}, data: undefined}]]);
     setState({
@@ -480,7 +480,7 @@ describe('TransitionMotion', () => {
         );
       },
     });
-    TestUtils.renderIntoDocument(<App />);
+    renderIntoDocument(<App />);
 
     expect(count).toEqual([[{key: '1', style: {x: 0}, data: undefined}]]);
     setState({
@@ -553,7 +553,7 @@ describe('TransitionMotion', () => {
       },
     });
 
-    TestUtils.renderIntoDocument(<App />);
+    renderIntoDocument(<App />);
 
     expect(count).toEqual([
       [
@@ -609,7 +609,7 @@ describe('TransitionMotion', () => {
       },
     });
 
-    TestUtils.renderIntoDocument(<App />);
+    renderIntoDocument(<App />);
 
     expect(count).toEqual([[
       {key: '1', style: {a: 0, b: 10}, data: undefined},
@@ -666,7 +666,7 @@ describe('TransitionMotion', () => {
       },
     });
 
-    TestUtils.renderIntoDocument(<App />);
+    renderIntoDocument(<App />);
 
     // somewhat defined behavior: notice that data is 3, not 1. For simplicity
     // of current implementation we've decided not to render data: [1] from
@@ -773,7 +773,7 @@ describe('TransitionMotion', () => {
       },
     });
 
-    TestUtils.renderIntoDocument(<App />);
+    renderIntoDocument(<App />);
 
     // somewhat defined behavior: notice that data is 3, not 1. For simplicity
     // of current implementation we've decided not to render data: [1] from

@@ -2,7 +2,7 @@ import React from 'react';
 import createReactClass from 'create-react-class';
 import {spring} from '../src/react-motion';
 import createMockRaf from './createMockRaf';
-import TestUtils from 'react-addons-test-utils';
+import renderIntoDocument from './renderIntoDocument';
 
 const injector = require('inject!../src/StaggeredMotion');
 
@@ -29,7 +29,7 @@ describe('StaggeredMotion', () => {
         );
       },
     });
-    TestUtils.renderIntoDocument(<App />);
+    renderIntoDocument(<App />);
   });
 
   it('should not throw on unmount', () => {
@@ -50,7 +50,7 @@ describe('StaggeredMotion', () => {
             </StaggeredMotion>;
       },
     });
-    TestUtils.renderIntoDocument(<App />);
+    renderIntoDocument(<App />);
     mockRaf.step(2);
     kill();
     mockRaf.step(3);
@@ -73,7 +73,7 @@ describe('StaggeredMotion', () => {
         );
       },
     });
-    TestUtils.renderIntoDocument(<App />);
+    renderIntoDocument(<App />);
 
     expect(count).toEqual([0]);
     mockRaf.step(4);
@@ -102,7 +102,7 @@ describe('StaggeredMotion', () => {
         );
       },
     });
-    TestUtils.renderIntoDocument(<App />);
+    renderIntoDocument(<App />);
 
     mockRaf.step(99);
     expect(count).toEqual([
@@ -139,7 +139,7 @@ describe('StaggeredMotion', () => {
       },
     });
 
-    TestUtils.renderIntoDocument(<App />);
+    renderIntoDocument(<App />);
 
     expect(count).toEqual([[0, 10, 0, 10]]);
     mockRaf.step(4);
@@ -173,7 +173,7 @@ describe('StaggeredMotion', () => {
         );
       },
     });
-    TestUtils.renderIntoDocument(<App />);
+    renderIntoDocument(<App />);
 
     expect(count).toEqual([0, 10]);
     mockRaf.step();
@@ -224,7 +224,7 @@ describe('StaggeredMotion', () => {
         );
       },
     });
-    TestUtils.renderIntoDocument(<App />);
+    renderIntoDocument(<App />);
 
     expect(count).toEqual([[0, 10, 0, 10]]);
     mockRaf.step(111);
@@ -260,7 +260,7 @@ describe('StaggeredMotion', () => {
         );
       },
     });
-    TestUtils.renderIntoDocument(<App />);
+    renderIntoDocument(<App />);
 
     expect(count).toEqual([0]);
     setState({p: true});
@@ -309,7 +309,7 @@ describe('StaggeredMotion', () => {
         );
       },
     });
-    TestUtils.renderIntoDocument(<App />);
+    renderIntoDocument(<App />);
 
     expect(count).toEqual([{a: 0}]);
     setState({a: 400});

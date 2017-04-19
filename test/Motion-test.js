@@ -2,7 +2,7 @@ import React from 'react';
 import createReactClass from 'create-react-class';
 import {spring} from '../src/react-motion';
 import createMockRaf from './createMockRaf';
-import TestUtils from 'react-addons-test-utils';
+import renderIntoDocument from './renderIntoDocument';
 
 const {createSpy} = global.jasmine;
 
@@ -36,7 +36,7 @@ describe('animation loop', () => {
         );
       },
     });
-    TestUtils.renderIntoDocument(<App />);
+    renderIntoDocument(<App />);
 
     expect(count).toEqual([0]);
     mockRaf.step(5);
@@ -64,7 +64,7 @@ describe('animation loop', () => {
         );
       },
     });
-    TestUtils.renderIntoDocument(<App />);
+    renderIntoDocument(<App />);
 
     mockRaf.step(5);
     expect(count).toEqual([
@@ -91,7 +91,7 @@ describe('animation loop', () => {
         );
       },
     });
-    TestUtils.renderIntoDocument(<App />);
+    renderIntoDocument(<App />);
 
     expect(count).toEqual([0]);
     mockRaf.step(10, 0);
@@ -146,7 +146,7 @@ describe('Motion', () => {
         return <Motion style={{a: 0}}>{() => null}</Motion>;
       },
     });
-    TestUtils.renderIntoDocument(<App />);
+    renderIntoDocument(<App />);
   });
 
   it('should not throw on unmount', () => {
@@ -165,7 +165,7 @@ describe('Motion', () => {
           : <Motion defaultStyle={{a: 0}} style={{a: spring(10)}}>{() => null}</Motion>;
       },
     });
-    TestUtils.renderIntoDocument(<App />);
+    renderIntoDocument(<App />);
     mockRaf.step(2);
     kill();
     mockRaf.step(3);
@@ -186,7 +186,7 @@ describe('Motion', () => {
         );
       },
     });
-    TestUtils.renderIntoDocument(<App />);
+    renderIntoDocument(<App />);
 
     expect(count).toEqual([0]);
     mockRaf.step(4);
@@ -215,7 +215,7 @@ describe('Motion', () => {
         );
       },
     });
-    TestUtils.renderIntoDocument(<App />);
+    renderIntoDocument(<App />);
 
     mockRaf.step(99);
     expect(count).toEqual([
@@ -248,7 +248,7 @@ describe('Motion', () => {
       },
     });
 
-    TestUtils.renderIntoDocument(<App />);
+    renderIntoDocument(<App />);
 
     expect(count).toEqual([[0, 10]]);
     mockRaf.step(4);
@@ -282,7 +282,7 @@ describe('Motion', () => {
         );
       },
     });
-    TestUtils.renderIntoDocument(<App />);
+    renderIntoDocument(<App />);
 
     expect(count).toEqual([0, 10]);
     mockRaf.step();
@@ -325,7 +325,7 @@ describe('Motion', () => {
         );
       },
     });
-    TestUtils.renderIntoDocument(<App />);
+    renderIntoDocument(<App />);
 
     expect(count).toEqual([0]);
     mockRaf.step(111);
@@ -361,7 +361,7 @@ describe('Motion', () => {
         );
       },
     });
-    TestUtils.renderIntoDocument(<App />);
+    renderIntoDocument(<App />);
 
     expect(count).toEqual([0]);
     setState({p: true});
@@ -412,7 +412,7 @@ describe('Motion', () => {
       },
     });
 
-    TestUtils.renderIntoDocument(<App />);
+    renderIntoDocument(<App />);
 
     mockRaf.step(22);
 
@@ -449,7 +449,7 @@ describe('Motion', () => {
       },
     });
 
-    TestUtils.renderIntoDocument(<App />);
+    renderIntoDocument(<App />);
 
     mockRaf.step(22);
 
@@ -484,7 +484,7 @@ describe('Motion', () => {
       },
     });
 
-    TestUtils.renderIntoDocument(<App />);
+    renderIntoDocument(<App />);
     mockRaf.step();
     setState({a: 50});
     mockRaf.step();
@@ -513,7 +513,7 @@ describe('Motion', () => {
         );
       },
     });
-    TestUtils.renderIntoDocument(<App />);
+    renderIntoDocument(<App />);
 
     expect(count).toEqual([{a: 0}]);
     setState({a: 400});
