@@ -8,7 +8,6 @@ import defaultRaf from 'raf';
 import shouldStopAnimation from './shouldStopAnimation';
 import React from 'react';
 import PropTypes from 'prop-types';
-import createReactClass from 'create-react-class';
 
 import type {
   ReactElement,
@@ -187,8 +186,8 @@ type TransitionMotionState = {
   mergedPropsStyles: Array<TransitionStyle>,
 };
 
-const TransitionMotion = createReactClass({
-  propTypes: {
+class TransitionMotion extends React.Component {
+  static propTypes = {
     defaultStyles: PropTypes.arrayOf(PropTypes.shape({
       key: PropTypes.string.isRequired,
       data: PropTypes.any,
@@ -209,19 +208,20 @@ const TransitionMotion = createReactClass({
     willEnter: PropTypes.func,
     willLeave: PropTypes.func,
     didLeave: PropTypes.func,
-  },
+  };
 
-  getDefaultProps(): {willEnter: WillEnter, willLeave: WillLeave, didLeave: DidLeave} {
-    return {
-      willEnter: styleThatEntered => stripStyle(styleThatEntered.style),
-      // recall: returning null makes the current unmounting TransitionStyle
-      // disappear immediately
-      willLeave: () => null,
-      didLeave: () => {},
-    };
-  },
+  static defaultProps: {willEnter: WillEnter, willLeave: WillLeave, didLeave: DidLeave} = {
+    willEnter: styleThatEntered => stripStyle(styleThatEntered.style),
+    // recall: returning null makes the current unmounting TransitionStyle
+    // disappear immediately
+    willLeave: () => null,
+    didLeave: () => {},
+  };
 
-  getInitialState(): TransitionMotionState {
+  state: TransitionMotionState;
+
+  constructor(props: TransitionProps) {
+    super(props);
     const {defaultStyles, styles, willEnter, willLeave, didLeave} = this.props;
     const destStyles: Array<TransitionStyle> = typeof styles === 'function' ? styles(defaultStyles) : styles;
 
@@ -264,25 +264,25 @@ const TransitionMotion = createReactClass({
       oldCurrentVelocities, // oldLastIdealVelocities really
     );
 
-    return {
+    this.state = {
       currentStyles,
       currentVelocities,
       lastIdealStyles,
       lastIdealVelocities,
       mergedPropsStyles,
     };
-  },
+  }
 
-  unmounting: (false: boolean),
-  animationID: (null: ?number),
-  prevTime: 0,
-  accumulatedTime: 0,
+  unmounting = (false: boolean);
+  animationID = (null: ?number);
+  prevTime = 0;
+  accumulatedTime = 0;
   // it's possible that currentStyle's value is stale: if props is immediately
   // changed from 0 to 400 to spring(0) again, the async currentStyle is still
   // at 0 (didn't have time to tick and interpolate even once). If we naively
   // compare currentStyle with destVal it'll be 0 === 0 (no animation, stop).
   // In reality currentStyle should be 400
-  unreadPropStyles: (null: ?Array<TransitionStyle>),
+  unreadPropStyles = (null: ?Array<TransitionStyle>);
   // after checking for unreadPropStyles != null, we manually go set the
   // non-interpolating values (those that are a number, without a spring
   // config)
@@ -341,7 +341,7 @@ const TransitionMotion = createReactClass({
       lastIdealStyles,
       lastIdealVelocities,
     });
-  },
+  }
 
   startAnimationIfNecessary(): void {
     if (this.unmounting) {
@@ -488,12 +488,12 @@ const TransitionMotion = createReactClass({
 
       this.startAnimationIfNecessary();
     });
-  },
+  }
 
   componentDidMount() {
     this.prevTime = defaultNow();
     this.startAnimationIfNecessary();
-  },
+  }
 
   componentWillReceiveProps(props: TransitionProps) {
     if (this.unreadPropStyles) {
@@ -518,7 +518,7 @@ const TransitionMotion = createReactClass({
       this.prevTime = defaultNow();
       this.startAnimationIfNecessary();
     }
-  },
+  }
 
   componentWillUnmount() {
     this.unmounting = true;
@@ -526,7 +526,7 @@ const TransitionMotion = createReactClass({
       defaultRaf.cancel(this.animationID);
       this.animationID = null;
     }
-  },
+  }
 
   render(): ReactElement {
     const hydratedStyles = rehydrateStyles(
@@ -536,7 +536,7 @@ const TransitionMotion = createReactClass({
     );
     const renderedChildren = this.props.children(hydratedStyles);
     return renderedChildren && React.Children.only(renderedChildren);
-  },
-});
+  }
+}
 
 export default TransitionMotion;

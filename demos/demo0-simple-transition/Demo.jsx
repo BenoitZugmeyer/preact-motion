@@ -1,20 +1,22 @@
 import React from 'react';
-import createReactClass from 'create-react-class';
 import {Motion, spring} from '../../src/react-motion';
 
-const Demo = createReactClass({
-  getInitialState() {
-    return {open: false};
-  },
+class Demo extends React.Component {
+  constructor(props) {
+    super(props)
+    this.handleMouseDown = this.handleMouseDown.bind(this);
+    this.handleTouchStart = this.handleTouchStart.bind(this);
+    this.state = {open: false};
+  }
 
   handleMouseDown() {
     this.setState({open: !this.state.open});
-  },
+  }
 
   handleTouchStart(e) {
     e.preventDefault();
     this.handleMouseDown();
-  },
+  }
 
   render() {
     return (
@@ -39,7 +41,7 @@ const Demo = createReactClass({
         </Motion>
       </div>
     );
-  },
-});
+  }
+}
 
 export default Demo;

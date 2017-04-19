@@ -1,10 +1,18 @@
 import React from 'react';
-import createReactClass from 'create-react-class';
 import {TransitionMotion, spring, presets} from '../../src/react-motion';
 
-const Demo = createReactClass({
-  getInitialState() {
-    return {
+class Demo extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleDone = this.handleDone.bind(this);
+    this.handleToggleAll = this.handleToggleAll.bind(this);
+    this.handleSelect = this.handleSelect.bind(this);
+    this.handleClearCompleted = this.handleClearCompleted.bind(this);
+    this.handleDestroy = this.handleDestroy.bind(this);
+
+    this.state = {
       todos: [
         // key is creation date
         {key: 't1', data: {text: 'Board the plane', isDone: false}},
@@ -22,12 +30,12 @@ const Demo = createReactClass({
       value: '',
       selected: 'all',
     };
-  },
+  }
 
   // logic from todo, unrelated to animation
   handleChange({target: {value}}) {
     this.setState({value});
-  },
+  }
 
   handleSubmit(e) {
     e.preventDefault();
@@ -37,7 +45,7 @@ const Demo = createReactClass({
     };
     // append at head
     this.setState({todos: [newItem].concat(this.state.todos)});
-  },
+  }
 
   handleDone(doneKey) {
     this.setState({
@@ -48,7 +56,7 @@ const Demo = createReactClass({
           : todo;
       }),
     });
-  },
+  }
 
   handleToggleAll() {
     const allNotDone = this.state.todos.every(({data}) => data.isDone);
@@ -57,24 +65,24 @@ const Demo = createReactClass({
         {key: key, data: {text: text, isDone: !allNotDone}}
       )),
     });
-  },
+  }
 
   handleSelect(selected) {
     this.setState({selected});
-  },
+  }
 
   handleClearCompleted() {
     this.setState({todos: this.state.todos.filter(({data}) => !data.isDone)});
-  },
+  }
 
   handleDestroy(date) {
     this.setState({todos: this.state.todos.filter(({key}) => key !== date)});
-  },
+  }
 
   // actual animation-related logic
   getDefaultStyles() {
     return this.state.todos.map(todo => ({...todo, style: {height: 0, opacity: 1}}));
-  },
+  }
 
   getStyles() {
     const {todos, value, selected} = this.state;
@@ -93,21 +101,21 @@ const Demo = createReactClass({
         }
       };
     });
-  },
+  }
 
   willEnter() {
     return {
       height: 0,
       opacity: 1,
     };
-  },
+  }
 
   willLeave() {
     return {
       height: spring(0),
       opacity: spring(0),
     };
-  },
+  }
 
   render() {
     const {todos, value, selected} = this.state;
@@ -195,7 +203,7 @@ const Demo = createReactClass({
         </footer>
       </section>
     );
-  },
-});
+  }
+}
 
 export default Demo;

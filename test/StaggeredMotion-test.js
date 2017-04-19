@@ -1,5 +1,4 @@
 import React from 'react';
-import createReactClass from 'create-react-class';
 import {spring} from '../src/react-motion';
 import createMockRaf from './createMockRaf';
 import renderIntoDocument from './renderIntoDocument';
@@ -19,37 +18,36 @@ describe('StaggeredMotion', () => {
   });
 
   it('should allow returning null from children function', () => {
-    const App = createReactClass({
-      render() {
-        // shouldn't throw here
-        return (
-          <StaggeredMotion styles={() => [{a: 0}]}>
-            {() => null}
-          </StaggeredMotion>
-        );
-      },
-    });
+    const App = () => {
+      // shouldn't throw here
+      return (
+        <StaggeredMotion styles={() => [{a: 0}]}>
+          {() => null}
+        </StaggeredMotion>
+      );
+    };
     renderIntoDocument(<App />);
   });
 
   it('should not throw on unmount', () => {
     spyOn(console, 'error');
     let kill = () => {};
-    const App = createReactClass({
-      getInitialState() {
-        return {kill: false};
-      },
+    class App extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = {kill: false};
+      }
       componentWillMount() {
         kill = () => this.setState({kill: true});
-      },
+      }
       render() {
         return this.state.kill
           ? null
           : <StaggeredMotion defaultStyles={[{a: 0}]} styles={() => [{a: spring(10)}]}>
               {() => null}
             </StaggeredMotion>;
-      },
-    });
+      }
+    }
     renderIntoDocument(<App />);
     mockRaf.step(2);
     kill();
@@ -59,20 +57,18 @@ describe('StaggeredMotion', () => {
 
   it('should allow a defaultStyles', () => {
     let count = [];
-    const App = createReactClass({
-      render() {
-        return (
-          <StaggeredMotion
-            defaultStyles={[{a: 0}]}
-            styles={() => [{a: spring(10)}]}>
-            {([{a}]) => {
-              count.push(a);
-              return null;
-            }}
-          </StaggeredMotion>
-        );
-      },
-    });
+    const App = () => {
+      return (
+        <StaggeredMotion
+          defaultStyles={[{a: 0}]}
+          styles={() => [{a: spring(10)}]}>
+          {([{a}]) => {
+            count.push(a);
+            return null;
+          }}
+        </StaggeredMotion>
+      );
+    };
     renderIntoDocument(<App />);
 
     expect(count).toEqual([0]);
@@ -88,20 +84,18 @@ describe('StaggeredMotion', () => {
 
   it('should accept different spring configs', () => {
     let count = [];
-    const App = createReactClass({
-      render() {
-        return (
-          <StaggeredMotion
-            defaultStyles={[{a: 0}]}
-            styles={() => [{a: spring(10, {stiffness: 100, damping: 50, precision: 16})}]}>
-            {([{a}]) => {
-              count.push(a);
-              return null;
-            }}
-          </StaggeredMotion>
-        );
-      },
-    });
+    const App = () => {
+      return (
+        <StaggeredMotion
+          defaultStyles={[{a: 0}]}
+          styles={() => [{a: spring(10, {stiffness: 100, damping: 50, precision: 16})}]}>
+          {([{a}]) => {
+            count.push(a);
+            return null;
+          }}
+        </StaggeredMotion>
+      );
+    };
     renderIntoDocument(<App />);
 
     mockRaf.step(99);
@@ -120,24 +114,22 @@ describe('StaggeredMotion', () => {
 
   it('should interpolate many values while staggering', () => {
     let count = [];
-    const App = createReactClass({
-      render() {
-        return (
-          <StaggeredMotion
-            defaultStyles={[{a: 0, b: 10}, {a: 0, b: 10}]}
-            styles={prevStyles => {
-              return prevStyles.map((_, i) => i === 0
-                ? {a: spring(10), b: spring(410)}
-                : {a: spring(prevStyles[i - 1].a), b: spring(prevStyles[i - 1].b)});
-            }}>
-            {([{a, b}, {a: a2, b: b2}]) => {
-              count.push([a, b, a2, b2]);
-              return null;
-            }}
-          </StaggeredMotion>
-        );
-      },
-    });
+    const App = () => {
+      return (
+        <StaggeredMotion
+          defaultStyles={[{a: 0, b: 10}, {a: 0, b: 10}]}
+          styles={prevStyles => {
+            return prevStyles.map((_, i) => i === 0
+              ? {a: spring(10), b: spring(410)}
+              : {a: spring(prevStyles[i - 1].a), b: spring(prevStyles[i - 1].b)});
+          }}>
+          {([{a, b}, {a: a2, b: b2}]) => {
+            count.push([a, b, a2, b2]);
+            return null;
+          }}
+        </StaggeredMotion>
+      );
+    };
 
     renderIntoDocument(<App />);
 
@@ -154,25 +146,23 @@ describe('StaggeredMotion', () => {
 
   it('should work with nested Motions', () => {
     let count = [];
-    const App = createReactClass({
-      render() {
-        return (
-          <StaggeredMotion defaultStyles={[{owner: 0}]} styles={() => [{owner: spring(10)}]}>
-            {([{owner}]) => {
-              count.push(owner);
-              return (
-                <StaggeredMotion defaultStyles={[{child: 10}]} styles={() => [{child: spring(400)}]}>
-                  {([{child}]) => {
-                    count.push(child);
-                    return null;
-                  }}
-                </StaggeredMotion>
-              );
-            }}
-          </StaggeredMotion>
-        );
-      },
-    });
+    const App = () => {
+      return (
+        <StaggeredMotion defaultStyles={[{owner: 0}]} styles={() => [{owner: spring(10)}]}>
+          {([{owner}]) => {
+            count.push(owner);
+            return (
+              <StaggeredMotion defaultStyles={[{child: 10}]} styles={() => [{child: spring(400)}]}>
+                {([{child}]) => {
+                  count.push(child);
+                  return null;
+                }}
+              </StaggeredMotion>
+            );
+          }}
+        </StaggeredMotion>
+      );
+    };
     renderIntoDocument(<App />);
 
     expect(count).toEqual([0, 10]);
@@ -206,24 +196,22 @@ describe('StaggeredMotion', () => {
   // maybe shouldStopAnimation logic has a flaw
   it('should reach destination value', () => {
     let count = [];
-    const App = createReactClass({
-      render() {
-        return (
-          <StaggeredMotion
-            defaultStyles={[{a: 0, b: 10}, {a: 0, b: 10}]}
-            styles={prevStyles => {
-              return prevStyles.map((_, i) => i === 0
-                ? {a: spring(10), b: spring(410)}
-                : {a: spring(prevStyles[i - 1].a), b: spring(prevStyles[i - 1].b)});
-            }}>
-            {([{a, b}, {a: a2, b: b2}]) => {
-              count.push([a, b, a2, b2]);
-              return null;
-            }}
-          </StaggeredMotion>
-        );
-      },
-    });
+    const App = () => {
+      return (
+        <StaggeredMotion
+          defaultStyles={[{a: 0, b: 10}, {a: 0, b: 10}]}
+          styles={prevStyles => {
+            return prevStyles.map((_, i) => i === 0
+              ? {a: spring(10), b: spring(410)}
+              : {a: spring(prevStyles[i - 1].a), b: spring(prevStyles[i - 1].b)});
+          }}>
+          {([{a, b}, {a: a2, b: b2}]) => {
+            count.push([a, b, a2, b2]);
+            return null;
+          }}
+        </StaggeredMotion>
+      );
+    };
     renderIntoDocument(<App />);
 
     expect(count).toEqual([[0, 10, 0, 10]]);
@@ -242,13 +230,14 @@ describe('StaggeredMotion', () => {
   it('should support jumping to value', () => {
     let count = [];
     let setState = () => {};
-    const App = createReactClass({
-      getInitialState() {
-        return {p: false};
-      },
+    class App extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = {p: false};
+      }
       componentWillMount() {
         setState = this.setState.bind(this);
-      },
+      }
       render() {
         return (
           <StaggeredMotion styles={() => [{a: this.state.p ? 400 : spring(0)}]}>
@@ -258,8 +247,8 @@ describe('StaggeredMotion', () => {
             }}
           </StaggeredMotion>
         );
-      },
-    });
+      }
+    }
     renderIntoDocument(<App />);
 
     expect(count).toEqual([0]);
@@ -291,13 +280,14 @@ describe('StaggeredMotion', () => {
   it('should behave well when many owner updates come in-between rAFs', () => {
     let count = [];
     let setState = () => {};
-    const App = createReactClass({
-      getInitialState() {
-        return {a: spring(0)};
-      },
+    class App extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = {a: spring(0)};
+      }
       componentWillMount() {
         setState = this.setState.bind(this);
-      },
+      }
       render() {
         return (
           <StaggeredMotion styles={() => [this.state]}>
@@ -307,8 +297,8 @@ describe('StaggeredMotion', () => {
             }}
           </StaggeredMotion>
         );
-      },
-    });
+      }
+    }
     renderIntoDocument(<App />);
 
     expect(count).toEqual([{a: 0}]);

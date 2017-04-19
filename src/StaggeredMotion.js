@@ -7,7 +7,6 @@ import defaultRaf from 'raf';
 import shouldStopAnimation from './shouldStopAnimation';
 import React from 'react';
 import PropTypes from 'prop-types';
-import createReactClass from 'create-react-class';
 
 import type {ReactElement, PlainStyle, Style, Velocity, StaggeredProps} from './Types';
 
@@ -33,35 +32,39 @@ function shouldStopAnimationAll(
   return true;
 }
 
-const StaggeredMotion = createReactClass({
-  propTypes: {
+class StaggeredMotion extends React.Component {
+
+  static propTypes = {
     // TOOD: warn against putting a config in here
     defaultStyles: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.number)),
     styles: PropTypes.func.isRequired,
     children: PropTypes.func.isRequired,
-  },
+  }
 
-  getInitialState(): StaggeredMotionState {
+  state: StaggeredMotionState;
+
+  constructor(props: StaggeredProps) {
+    super(props);
     const {defaultStyles, styles} = this.props;
     const currentStyles: Array<PlainStyle> = defaultStyles || styles().map(stripStyle);
     const currentVelocities = currentStyles.map(currentStyle => mapToZero(currentStyle));
-    return {
+    this.state = {
       currentStyles,
       currentVelocities,
       lastIdealStyles: currentStyles,
       lastIdealVelocities: currentVelocities,
     };
-  },
+  }
 
-  animationID: (null: ?number),
-  prevTime: 0,
-  accumulatedTime: 0,
+  animationID = (null: ?number);
+  prevTime = 0;
+  accumulatedTime = 0;
   // it's possible that currentStyle's value is stale: if props is immediately
   // changed from 0 to 400 to spring(0) again, the async currentStyle is still
   // at 0 (didn't have time to tick and interpolate even once). If we naively
   // compare currentStyle with destVal it'll be 0 === 0 (no animation, stop).
   // In reality currentStyle should be 400
-  unreadPropStyles: (null: ?Array<Style>),
+  unreadPropStyles = (null: ?Array<Style>);
   // after checking for unreadPropStyles != null, we manually go set the
   // non-interpolating values (those that are a number, without a spring
   // config)
@@ -99,7 +102,7 @@ const StaggeredMotion = createReactClass({
     if (someDirty) {
       this.setState({currentStyles, currentVelocities, lastIdealStyles, lastIdealVelocities});
     }
-  },
+  }
 
   startAnimationIfNecessary(): void {
     // TODO: when config is {a: 10} and dest is {a: 10} do we raf once and
@@ -218,12 +221,12 @@ const StaggeredMotion = createReactClass({
 
       this.startAnimationIfNecessary();
     });
-  },
+  }
 
   componentDidMount() {
     this.prevTime = defaultNow();
     this.startAnimationIfNecessary();
-  },
+  }
 
   componentWillReceiveProps(props: StaggeredProps) {
     if (this.unreadPropStyles != null) {
@@ -236,19 +239,19 @@ const StaggeredMotion = createReactClass({
       this.prevTime = defaultNow();
       this.startAnimationIfNecessary();
     }
-  },
+  }
 
   componentWillUnmount() {
     if (this.animationID != null) {
       defaultRaf.cancel(this.animationID);
       this.animationID = null;
     }
-  },
+  }
 
   render(): ReactElement {
     const renderedChildren = this.props.children(this.state.currentStyles);
     return renderedChildren && React.Children.only(renderedChildren);
-  },
-});
+  }
+}
 
 export default StaggeredMotion;
