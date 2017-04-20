@@ -6,6 +6,5 @@ node_modules
 webpack.*.js
 server.js
 karma.*.js
-test/integration
 demos/demo6/babel.js
 demos/*/Demo.jsx
