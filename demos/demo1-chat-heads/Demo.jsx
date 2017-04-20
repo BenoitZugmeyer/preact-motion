@@ -1,5 +1,5 @@
 import { Component, h } from 'preact';
-import {StaggeredMotion, spring, presets} from '../../src/react-motion';
+import {StaggeredMotion, spring, presets} from '../../src';
 import range from 'lodash.range';
 
 class Demo extends Component {

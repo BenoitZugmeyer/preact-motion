@@ -1,5 +1,5 @@
 import { Component, h } from 'preact';
-import {TransitionMotion, spring} from '../../src/react-motion';
+import {TransitionMotion, spring} from '../../src';
 
 const leavingSpringConfig = {stiffness: 60, damping: 15};
 class Demo extends Component {

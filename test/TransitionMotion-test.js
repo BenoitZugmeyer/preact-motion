@@ -1,5 +1,5 @@
 import {Component, h, options} from 'preact';
-import {spring} from '../src/react-motion';
+import {spring} from '../src';
 import createMockRaf from './createMockRaf';
 import renderIntoDocument from './renderIntoDocument';
 

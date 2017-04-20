@@ -9,14 +9,14 @@ var path = require('path');
 var config = {
   devtool: 'sourcemap',
   entry: {
-    index: './src/react-motion.js'
+    index: './src/index.js'
   },
   output: {
     path: path.join(__dirname, 'build'),
     publicPath: 'build/',
-    filename: 'react-motion.js',
-    sourceMapFilename: 'react-motion.map',
-    library: 'ReactMotion',
+    filename: 'preact-motion.js',
+    sourceMapFilename: 'preact-motion.map',
+    library: 'PreactMotion',
     libraryTarget: 'umd'
   },
   module: {

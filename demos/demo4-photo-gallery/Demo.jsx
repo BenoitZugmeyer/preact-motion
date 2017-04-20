@@ -1,5 +1,5 @@
 import { Component, h } from 'preact';
-import {Motion, spring} from '../../src/react-motion';
+import {Motion, spring} from '../../src';
 
 const springSettings = {stiffness: 170, damping: 26};
 const NEXT = 'show-next';

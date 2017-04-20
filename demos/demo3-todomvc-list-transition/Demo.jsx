@@ -1,5 +1,5 @@
 import { Component, h } from 'preact';
-import {TransitionMotion, spring, presets} from '../../src/react-motion';
+import {TransitionMotion, spring, presets} from '../../src';
 
 class Demo extends Component {
   constructor(props) {

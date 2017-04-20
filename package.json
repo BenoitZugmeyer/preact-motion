@@ -1,8 +1,8 @@
 {
-  "name": "react-motion",
-  "version": "0.4.8",
-  "description": "A spring that solves your animation problems.",
-  "main": "lib/react-motion.js",
+  "name": "preact-motion",
+  "version": "1.0.0-alhpa.0",
+  "description": "A fork of React-Motion to be used with Preact.",
+  "main": "lib/index.js",
   "peerDependencies": {},
   "devDependencies": {
     "babel": "^5.8.23",
@@ -48,10 +48,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/chenglou/react-motion.git"
+    "url": "https://github.com/BenoitZugmeyer/preact-motion.git"
   },
   "keywords": [
     "react",
+    "preact",
     "component",
     "react-component",
     "transitiongroup",

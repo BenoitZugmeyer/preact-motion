@@ -1,5 +1,5 @@
 import { Component, h } from 'preact';
-import {Motion, spring} from '../../src/react-motion';
+import {Motion, spring} from '../../src';
 import range from 'lodash.range';
 
 const gridWidth = 150;
