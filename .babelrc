@@ -1,5 +1,15 @@
 {
-  "stage": 0,
-  "loose": "all",
-  "jsxPragma": "h"
+  "presets": [
+    ["env", {
+      "targets": {
+        "browsers": ["last 2 versions"]
+      }
+    }]
+  ],
+  "plugins": [
+    ["transform-react-jsx", { "pragma": "h" }],
+    "transform-flow-strip-types",
+    "transform-class-properties",
+    "transform-object-rest-spread"
+  ]
 }

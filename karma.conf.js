@@ -39,7 +39,7 @@ module.exports = function (config) {
     basePath: '',
     frameworks: ['jasmine'],
     files: [
-      'node_modules/babel-core/browser-polyfill.js',
+      'node_modules/babel-polyfill/browser.js',
       'test/index.js',
     ],
     webpack: webpackConfig,

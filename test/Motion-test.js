@@ -20,7 +20,7 @@ describe('animation loop', () => {
     Motion = injector({
       raf: mockRaf.raf,
       'performance-now': mockRaf.now,
-    });
+    }).default;
   });
 
   it('should interpolate correctly when the timer is perfect', () => {
@@ -131,7 +131,7 @@ describe('Motion', () => {
     Motion = injector({
       raf: mockRaf.raf,
       'performance-now': mockRaf.now,
-    });
+    }).default;
   });
 
   it('should allow returning null from children function', () => {

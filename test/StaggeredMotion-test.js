@@ -16,7 +16,7 @@ describe('StaggeredMotion', () => {
     StaggeredMotion = injector({
       raf: mockRaf.raf,
       'performance-now': mockRaf.now,
-    });
+    }).default;
   });
 
   it('should allow returning null from children function', () => {
