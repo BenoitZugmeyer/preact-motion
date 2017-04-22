@@ -42,10 +42,6 @@ module.exports = {
         exclude: /build|lib|bower_components|node_modules/,
         loader: 'eslint-loader',
         enforce: "pre"
-      },
-      {
-        test: /\.css$/,
-        loaders: [ "style-loader", "css-loader" ]
       }
     ],
   },
