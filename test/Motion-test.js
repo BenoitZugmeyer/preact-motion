@@ -1,26 +1,19 @@
 import {Component, h, options} from 'preact';
-import {spring} from '../src';
+import {spring, Motion} from '../src';
 import createMockRaf from './createMockRaf';
 import renderIntoDocument from './renderIntoDocument';
 
 options.debounceRendering = (fn) => fn();
 
-const {createSpy} = global.jasmine;
-
-const injector = require('inject-loader!../src/Motion');
+const {createSpy} = jasmine;
 
 // temporarily putting the animation loop test here
 // TODO: put it in the correct file
 describe('animation loop', () => {
-  let Motion;
   let mockRaf;
 
   beforeEach(() => {
     mockRaf = createMockRaf();
-    Motion = injector({
-      raf: mockRaf.raf,
-      'performance-now': mockRaf.now,
-    }).default;
   });
 
   it('should interpolate correctly when the timer is perfect', () => {
@@ -123,15 +116,10 @@ describe('animation loop', () => {
 });
 
 describe('Motion', () => {
-  let Motion;
   let mockRaf;
 
   beforeEach(() => {
     mockRaf = createMockRaf();
-    Motion = injector({
-      raf: mockRaf.raf,
-      'performance-now': mockRaf.now,
-    }).default;
   });
 
   it('should allow returning null from children function', () => {

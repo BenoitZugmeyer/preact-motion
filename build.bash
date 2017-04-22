@@ -1,0 +1,19 @@
+#!/bin/bash
+
+set -euo pipefail
+
+rm -rf build
+echo "Building for production..."
+rollup -c --external preact --format umd --output build/preact-motion.js --environment NODE_ENV:production
+echo "Building for dev..."
+rollup -c --external preact --format umd --output build/preact-motion.dev.js --environment NODE_ENV:development
+echo "Building for esnext dev..."
+rollup -c --external preact --format es  --output build/preact-motion.es.js --environment NODE_ENV:
+
+echo "Generating flow types..."
+# Idea from https://github.com/facebook/flow/issues/1996#issuecomment-228925018
+cat > build/preact-motion.dev.js.flow <<- EOS
+/* @flow */
+
+export * from '../src';
+EOS

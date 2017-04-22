@@ -1,22 +1,15 @@
 import {Component, h, options} from 'preact';
-import {spring} from '../src';
+import {spring, StaggeredMotion} from '../src';
 import createMockRaf from './createMockRaf';
 import renderIntoDocument from './renderIntoDocument';
 
 options.debounceRendering = (fn) => fn();
 
-const injector = require('inject-loader!../src/StaggeredMotion');
-
 describe('StaggeredMotion', () => {
-  let StaggeredMotion;
   let mockRaf;
 
   beforeEach(() => {
     mockRaf = createMockRaf();
-    StaggeredMotion = injector({
-      raf: mockRaf.raf,
-      'performance-now': mockRaf.now,
-    }).default;
   });
 
   it('should allow returning null from children function', () => {

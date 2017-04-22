@@ -15,14 +15,14 @@ Please see the the React-Motion documentation for usage instructions.
   dependency.
 
 * Stay as close as possible to React-Motion, including:
-  * Same API ;
-  * Same developpers tools (flow, prop-types) ;
-  * Same tests and demos.
+  * same API ;
+  * same developpers tools (flow, prop-types) ;
+  * same tests and demos.
 
 * Better, smaller packaging:
-  * Expose a `jsnext:main` entry point (WIP).
-  * Use Rollup to provide smaller packages (WIP).
-  * Other tweaks to make production bundles smaller (WIP).
+  * expose a `jsnext:main` entry point ;
+  * use Rollup to provide smaller packages ;
+  * other tweaks to make production bundles smaller.
 
 ### Versioning
 

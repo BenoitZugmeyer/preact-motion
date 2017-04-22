@@ -15,7 +15,7 @@ export default function (): Object {
     return id;
   };
 
-  raf.cancel = id2 => {
+  const caf = id2 => {
     allCallbacks = allCallbacks.filter(item => item.id !== id2);
   };
 
@@ -34,5 +34,9 @@ export default function (): Object {
     }
   };
 
-  return {now, raf, step};
+  spyOn(window, 'requestAnimationFrame').and.callFake(raf);
+  spyOn(window, 'cancelAnimationFrame').and.callFake(caf);
+  spyOn(performance, 'now').and.callFake(now);
+
+  return {step};
 }

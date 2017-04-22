@@ -1,68 +1,26 @@
-'use strict';
+process.env.NODE_ENV = 'test';
 
-process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+let rollupConfig = require('./rollup.config');
 
-var path = require('path');
-var webpack = require('webpack');
-
-var withCoverage = process.argv.indexOf('coverage') !== -1 || process.env.COVERAGE;
-
-var webpackConfig = {
-  devtool: 'eval',
-  resolve: {
-    extensions: ['.js'],
-  },
-  module: {
-    rules: withCoverage ?
-      [
-        {
-          test: /\.js$/,
-          include: [path.resolve('./test')],
-          loader: 'babel-loader'
-        },
-        {
-          test: /\.js$/,
-          include: [path.resolve('./src')],
-          loader: 'isparta-loader'
-        },
-      ] :
-      [
-        {
-          test: /\.js$/,
-          include: [path.resolve('./src'), path.resolve('./test')],
-          loader: 'babel-loader',
-        },
-      ],
-  },
-  stats: {
-    colors: true,
-  },
-  plugins: [
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
-    })
-  ],
-};
-
-module.exports = function (config) {
+module.exports = (config) => {
   config.set({
     basePath: '',
     frameworks: ['jasmine'],
+
     files: [
       'node_modules/babel-polyfill/browser.js',
-      'test/index.js',
+      // Watch src files for changes but
+      // don't load them into the browser.
+      { pattern: 'src/**/*.js', included: false },
+      'test/**/*-test.js',
     ],
-    webpack: webpackConfig,
-    webpackMiddleware: {
-      stats: {
-        chunkModules: false,
-        colors: true,
-      },
-    },
-    exclude: [],
+
     preprocessors: {
-      'test/index.js': ['webpack'],
+      'src/**/*.js': ['rollup'],
+      'test/**/*-test.js': ['rollup'],
     },
+
+    exclude: [],
     reporters: ['jasmine-diff', 'progress'],
     jasmineDiffReporter: {
       pretty: true,
@@ -72,8 +30,8 @@ module.exports = function (config) {
         actualBg: '',
         actualFg: 'green',
         defaultBg: '',
-        defaultFg: 'grey'
-      }
+        defaultFg: 'grey',
+      },
     },
     coverageReporter: {
       dir: './coverage/',
@@ -93,5 +51,10 @@ module.exports = function (config) {
     autoWatch: false,
     browsers: ['PhantomJS'],
     singleRun: true,
+
+    rollupPreprocessor: Object.assign({}, rollupConfig, {
+      format: 'iife',
+      sourceMap: 'inline',
+    }),
   });
 };
