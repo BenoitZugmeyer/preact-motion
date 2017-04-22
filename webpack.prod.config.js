@@ -27,7 +27,11 @@ var config = {
       }
     ]
   },
-  plugins: [],
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+    })
+  ],
   resolve: {
     extensions: ['.js', '.jsx']
   },
@@ -39,6 +43,11 @@ var config = {
       amd: 'preact'
     }
   },
+  node: {
+    // performance-now is using process.hrtime if it is present, but we don't want to shim process
+    // in the browser.
+    process: false
+  }
 };
 
 module.exports = config;

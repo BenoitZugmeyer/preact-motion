@@ -53,4 +53,9 @@ module.exports = {
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
     })
   ],
+  node: {
+    // performance-now is using process.hrtime if it is present, but we don't want to shim process
+    // in the browser.
+    process: false
+  }
 };
