@@ -10,17 +10,27 @@ var withCoverage = process.argv.indexOf('coverage') !== -1 || process.env.COVERA
 var webpackConfig = {
   devtool: 'eval',
   resolve: {
-    extensions: ['', '.js'],
+    extensions: ['.js'],
   },
   module: {
-    loaders: withCoverage ?
+    rules: withCoverage ?
       [
-        {test: /\.js$/, loader: 'babel', include: [path.resolve('./test')]},
-        {test: /\.js$/, loader: 'isparta', include: [path.resolve('./src')]},
+        {
+          test: /\.js$/,
+          include: [path.resolve('./test')],
+          loader: 'babel-loader'
+        },
+        {
+          test: /\.js$/,
+          include: [path.resolve('./src')],
+          loader: 'isparta-loader'
+        },
       ] :
       [
         {
-          test: /\.js$/, loader: 'babel', include: [path.resolve('./src'), path.resolve('./test')],
+          test: /\.js$/,
+          include: [path.resolve('./src'), path.resolve('./test')],
+          loader: 'babel-loader',
         },
       ],
   },

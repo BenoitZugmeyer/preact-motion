@@ -5,7 +5,7 @@ import renderIntoDocument from './renderIntoDocument';
 
 options.debounceRendering = (fn) => fn();
 
-const injector = require('inject!../src/TransitionMotion');
+const injector = require('inject-loader!../src/TransitionMotion');
 
 describe('TransitionMotion', () => {
   let TransitionMotion;

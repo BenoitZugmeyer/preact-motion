@@ -5,7 +5,7 @@ import renderIntoDocument from './renderIntoDocument';
 
 options.debounceRendering = (fn) => fn();
 
-const injector = require('inject!../src/StaggeredMotion');
+const injector = require('inject-loader!../src/StaggeredMotion');
 
 describe('StaggeredMotion', () => {
   let StaggeredMotion;

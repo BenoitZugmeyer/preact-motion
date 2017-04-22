@@ -20,14 +20,16 @@ var config = {
     libraryTarget: 'umd'
   },
   module: {
-    loaders: [{
-      test: /\.(js|jsx)/,
-      loader: 'babel'
-    }]
+    rules: [
+      {
+        test: /\.(js|jsx)$/,
+        loader: 'babel-loader'
+      }
+    ]
   },
   plugins: [],
   resolve: {
-    extensions: ['', '.js', '.jsx']
+    extensions: ['.js', '.jsx']
   },
   externals: {
     'preact': {
