@@ -5,7 +5,7 @@
 This is a fork of the well known [React-Motion](https://github.com/chenglou/react-motion) library
 customized to support [Preact](http://developit.github.io/preact/) out of the box.
 
-Please see the the React-Motion documentation for usage instructions.
+Please see the React-Motion documentation for usage instructions.
 
 ## About this fork
 
