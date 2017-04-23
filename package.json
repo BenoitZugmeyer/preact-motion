@@ -30,7 +30,10 @@
     "karma-phantomjs-launcher": "^1.0.0",
     "karma-rollup-plugin": "^0.2.4",
     "lodash.range": "^3.0.1",
+    "performance-now": "^0.2.0",
     "preact": "^8.1.0",
+    "prop-types": "^15.5.8",
+    "raf": "^3.1.0",
     "rollup": "^0.41.6",
     "rollup-plugin-babel": "^2.7.1",
     "rollup-plugin-commonjs": "^8.0.2",
@@ -71,8 +74,5 @@
   "author": "chenglou",
   "license": "MIT",
   "dependencies": {
-    "performance-now": "^0.2.0",
-    "prop-types": "^15.5.8",
-    "raf": "^3.1.0"
   }
 }
