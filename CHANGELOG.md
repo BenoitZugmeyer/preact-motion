@@ -1,3 +1,6 @@
+2017-04-23 v1.0.1 (react-motion v0.4.8)
+* always expose an unoptimized bundle when using via NPM
+
 2017-04-23 v1.0.0 (react-motion v0.4.8)
 * do not include preact in the final bundles
 * replace webpack with rollup
