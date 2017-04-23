@@ -14,7 +14,7 @@ rollup -c --external preact --format umd --output build/preact-motion.prod.js --
 
 echo "Generating flow types..."
 # Idea from https://github.com/facebook/flow/issues/1996#issuecomment-228925018
-cat > build/preact-motion.dev.js.flow <<- EOS
+cat > build/preact-motion.js.flow <<- EOS
 /* @flow */
 
 export * from '../src';
