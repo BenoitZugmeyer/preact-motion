@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 import {Component, h, options} from 'preact';
 import {spring, StaggeredMotion} from '../src';
 import createMockRaf from './createMockRaf';
@@ -13,14 +14,16 @@ describe('StaggeredMotion', () => {
   });
 
   it('should allow returning null from children function', () => {
-    const App = () => {
-      // shouldn't throw here
-      return (
-        <StaggeredMotion styles={() => [{a: 0}]}>
-          {() => null}
-        </StaggeredMotion>
-      );
-    };
+    class App extends Component {
+      render() {
+        // shouldn't throw here
+        return (
+          <StaggeredMotion styles={() => [{a: 0}]}>
+            {() => null}
+          </StaggeredMotion>
+        );
+      }
+    }
     renderIntoDocument(<App />);
   });
 
@@ -28,9 +31,12 @@ describe('StaggeredMotion', () => {
     spyOn(console, 'error');
     let kill = () => {};
     class App extends Component {
-      constructor(props) {
-        super(props);
-        this.state = {kill: false};
+      constructor() {
+        super();
+
+        this.state = {
+          kill: false,
+        };
       }
       componentWillMount() {
         kill = () => this.setState({kill: true});
@@ -52,18 +58,20 @@ describe('StaggeredMotion', () => {
 
   it('should allow a defaultStyles', () => {
     let count = [];
-    const App = () => {
-      return (
-        <StaggeredMotion
-          defaultStyles={[{a: 0}]}
-          styles={() => [{a: spring(10)}]}>
-          {([{a}]) => {
-            count.push(a);
-            return null;
-          }}
-        </StaggeredMotion>
-      );
-    };
+    class App extends Component {
+      render() {
+        return (
+          <StaggeredMotion
+            defaultStyles={[{a: 0}]}
+            styles={() => [{a: spring(10)}]}>
+            {([{a}]) => {
+              count.push(a);
+              return null;
+            }}
+          </StaggeredMotion>
+        );
+      }
+    }
     renderIntoDocument(<App />);
 
     expect(count).toEqual([0]);
@@ -79,18 +87,20 @@ describe('StaggeredMotion', () => {
 
   it('should accept different spring configs', () => {
     let count = [];
-    const App = () => {
-      return (
-        <StaggeredMotion
-          defaultStyles={[{a: 0}]}
-          styles={() => [{a: spring(10, {stiffness: 100, damping: 50, precision: 16})}]}>
-          {([{a}]) => {
-            count.push(a);
-            return null;
-          }}
-        </StaggeredMotion>
-      );
-    };
+    class App extends Component {
+      render() {
+        return (
+          <StaggeredMotion
+            defaultStyles={[{a: 0}]}
+            styles={() => [{a: spring(10, {stiffness: 100, damping: 50, precision: 16})}]}>
+            {([{a}]) => {
+              count.push(a);
+              return null;
+            }}
+          </StaggeredMotion>
+        );
+      }
+    }
     renderIntoDocument(<App />);
 
     mockRaf.step(99);
@@ -109,22 +119,24 @@ describe('StaggeredMotion', () => {
 
   it('should interpolate many values while staggering', () => {
     let count = [];
-    const App = () => {
-      return (
-        <StaggeredMotion
-          defaultStyles={[{a: 0, b: 10}, {a: 0, b: 10}]}
-          styles={prevStyles => {
-            return prevStyles.map((_, i) => i === 0
-              ? {a: spring(10), b: spring(410)}
-              : {a: spring(prevStyles[i - 1].a), b: spring(prevStyles[i - 1].b)});
-          }}>
-          {([{a, b}, {a: a2, b: b2}]) => {
-            count.push([a, b, a2, b2]);
-            return null;
-          }}
-        </StaggeredMotion>
-      );
-    };
+    class App extends Component {
+      render() {
+        return (
+          <StaggeredMotion
+            defaultStyles={[{a: 0, b: 10}, {a: 0, b: 10}]}
+            styles={prevStyles => {
+              return prevStyles.map((_, i) => i === 0
+                ? {a: spring(10), b: spring(410)}
+                : {a: spring(prevStyles[i - 1].a), b: spring(prevStyles[i - 1].b)});
+            }}>
+            {([{a, b}, {a: a2, b: b2}]) => {
+              count.push([a, b, a2, b2]);
+              return null;
+            }}
+          </StaggeredMotion>
+        );
+      }
+    }
 
     renderIntoDocument(<App />);
 
@@ -141,23 +153,25 @@ describe('StaggeredMotion', () => {
 
   it('should work with nested Motions', () => {
     let count = [];
-    const App = () => {
-      return (
-        <StaggeredMotion defaultStyles={[{owner: 0}]} styles={() => [{owner: spring(10)}]}>
-          {([{owner}]) => {
-            count.push(owner);
-            return (
-              <StaggeredMotion defaultStyles={[{child: 10}]} styles={() => [{child: spring(400)}]}>
-                {([{child}]) => {
-                  count.push(child);
-                  return null;
-                }}
-              </StaggeredMotion>
-            );
-          }}
-        </StaggeredMotion>
-      );
-    };
+    class App extends Component {
+      render() {
+        return (
+          <StaggeredMotion defaultStyles={[{owner: 0}]} styles={() => [{owner: spring(10)}]}>
+            {([{owner}]) => {
+              count.push(owner);
+              return (
+                <StaggeredMotion defaultStyles={[{child: 10}]} styles={() => [{child: spring(400)}]}>
+                  {([{child}]) => {
+                    count.push(child);
+                    return null;
+                  }}
+                </StaggeredMotion>
+              );
+            }}
+          </StaggeredMotion>
+        );
+      }
+    }
     renderIntoDocument(<App />);
 
     expect(count).toEqual([0, 10]);
@@ -191,22 +205,24 @@ describe('StaggeredMotion', () => {
   // maybe shouldStopAnimation logic has a flaw
   it('should reach destination value', () => {
     let count = [];
-    const App = () => {
-      return (
-        <StaggeredMotion
-          defaultStyles={[{a: 0, b: 10}, {a: 0, b: 10}]}
-          styles={prevStyles => {
-            return prevStyles.map((_, i) => i === 0
-              ? {a: spring(10), b: spring(410)}
-              : {a: spring(prevStyles[i - 1].a), b: spring(prevStyles[i - 1].b)});
-          }}>
-          {([{a, b}, {a: a2, b: b2}]) => {
-            count.push([a, b, a2, b2]);
-            return null;
-          }}
-        </StaggeredMotion>
-      );
-    };
+    class App extends Component {
+      render() {
+        return (
+          <StaggeredMotion
+            defaultStyles={[{a: 0, b: 10}, {a: 0, b: 10}]}
+            styles={prevStyles => {
+              return prevStyles.map((_, i) => i === 0
+                ? {a: spring(10), b: spring(410)}
+                : {a: spring(prevStyles[i - 1].a), b: spring(prevStyles[i - 1].b)});
+            }}>
+            {([{a, b}, {a: a2, b: b2}]) => {
+              count.push([a, b, a2, b2]);
+              return null;
+            }}
+          </StaggeredMotion>
+        );
+      }
+    }
     renderIntoDocument(<App />);
 
     expect(count).toEqual([[0, 10, 0, 10]]);
@@ -226,9 +242,12 @@ describe('StaggeredMotion', () => {
     let count = [];
     let setState = () => {};
     class App extends Component {
-      constructor(props) {
-        super(props);
-        this.state = {p: false};
+      constructor() {
+        super();
+
+        this.state = {
+          p: false,
+        };
       }
       componentWillMount() {
         setState = this.setState.bind(this);
@@ -276,9 +295,12 @@ describe('StaggeredMotion', () => {
     let count = [];
     let setState = () => {};
     class App extends Component {
-      constructor(props) {
-        super(props);
-        this.state = {a: spring(0)};
+      constructor() {
+        super();
+
+        this.state = {
+          a: spring(0),
+        };
       }
       componentWillMount() {
         setState = this.setState.bind(this);

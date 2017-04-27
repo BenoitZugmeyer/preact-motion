@@ -19,10 +19,7 @@ type MotionState = {
   lastIdealVelocity: Velocity,
 };
 
-class Motion extends Component {
-
-  state: MotionState;
-
+export default class Motion extends Component {
   static propTypes = {
     // TOOD: warn against putting a config in here
     defaultStyle: PropTypes.objectOf(PropTypes.number),
@@ -35,12 +32,24 @@ class Motion extends Component {
     onRest: PropTypes.func,
   };
 
+  state: MotionState;
+  props: MotionProps;
+
   constructor(props: MotionProps) {
     super(props);
+    this.state = this.defaultState();
+  }
+
+  wasAnimating: boolean = false;
+  animationID: ?number = null;
+  prevTime: number = 0;
+  accumulatedTime: number = 0;
+
+  defaultState(): MotionState {
     const {defaultStyle, style} = this.props;
     const currentStyle = defaultStyle || stripStyle(style);
     const currentVelocity = mapToZero(currentStyle);
-    this.state = {
+    return {
       currentStyle,
       currentVelocity,
       lastIdealStyle: currentStyle,
@@ -48,20 +57,16 @@ class Motion extends Component {
     };
   }
 
-  wasAnimating = false;
-  animationID = (null: ?number);
-  prevTime = 0;
-  accumulatedTime = 0;
   // it's possible that currentStyle's value is stale: if props is immediately
   // changed from 0 to 400 to spring(0) again, the async currentStyle is still
   // at 0 (didn't have time to tick and interpolate even once). If we naively
   // compare currentStyle with destVal it'll be 0 === 0 (no animation, stop).
   // In reality currentStyle should be 400
-  unreadPropStyle = (null: ?Style);
+  unreadPropStyle: ?Style = null;
   // after checking for unreadPropStyle != null, we manually go set the
   // non-interpolating values (those that are a number, without a spring
   // config)
-  clearUnreadPropStyle(destStyle: Style): void {
+  clearUnreadPropStyle = (destStyle: Style): void => {
     let dirty = false;
     let {currentStyle, currentVelocity, lastIdealStyle, lastIdealVelocity} = this.state;
 
@@ -90,9 +95,9 @@ class Motion extends Component {
     if (dirty) {
       this.setState({currentStyle, currentVelocity, lastIdealStyle, lastIdealVelocity});
     }
-  }
+  };
 
-  startAnimationIfNecessary(): void {
+  startAnimationIfNecessary = (): void => {
     // TODO: when config is {a: 10} and dest is {a: 10} do we raf once and
     // call cb? No, otherwise accidental parent rerender causes cb trigger
     this.animationID = defaultRaf((timestamp) => {
@@ -202,7 +207,7 @@ class Motion extends Component {
 
       this.startAnimationIfNecessary();
     });
-  }
+  };
 
   componentDidMount() {
     this.prevTime = defaultNow();
@@ -233,5 +238,3 @@ class Motion extends Component {
     return this.props.children[0](this.state.currentStyle);
   }
 }
-
-export default Motion;

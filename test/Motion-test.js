@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 import {Component, h, options} from 'preact';
 import {spring, Motion} from '../src';
 import createMockRaf from './createMockRaf';
@@ -18,16 +19,18 @@ describe('animation loop', () => {
 
   it('should interpolate correctly when the timer is perfect', () => {
     let count = [];
-    const App = () => {
-      return (
-        <Motion defaultStyle={{a: 0}} style={{a: spring(10)}}>
-          {({a}) => {
-            count.push(a);
-            return null;
-          }}
-        </Motion>
-      );
-    };
+    class App extends Component {
+      render() {
+        return (
+          <Motion defaultStyle={{a: 0}} style={{a: spring(10)}}>
+            {({a}) => {
+              count.push(a);
+              return null;
+            }}
+          </Motion>
+        );
+      }
+    }
     renderIntoDocument(<App />);
 
     expect(count).toEqual([0]);
@@ -44,16 +47,18 @@ describe('animation loop', () => {
 
   it('should work with negative numbers', () => {
     let count = [];
-    const App = () => {
-      return (
-        <Motion defaultStyle={{a: -10}} style={{a: spring(-100)}}>
-          {({a}) => {
-            count.push(a);
-            return null;
-          }}
-        </Motion>
-      );
-    };
+    class App extends Component {
+      render() {
+        return (
+          <Motion defaultStyle={{a: -10}} style={{a: spring(-100)}}>
+            {({a}) => {
+              count.push(a);
+              return null;
+            }}
+          </Motion>
+        );
+      }
+    }
     renderIntoDocument(<App />);
 
     mockRaf.step(5);
@@ -69,16 +74,18 @@ describe('animation loop', () => {
 
   it('should interpolate correctly when the timer is imperfect', () => {
     let count = [];
-    const App = () => {
-      return (
-        <Motion defaultStyle={{a: 0}} style={{a: spring(10)}}>
-          {({a}) => {
-            count.push(a);
-            return null;
-          }}
-        </Motion>
-      );
-    };
+    class App extends Component {
+      render() {
+        return (
+          <Motion defaultStyle={{a: 0}} style={{a: spring(10)}}>
+            {({a}) => {
+              count.push(a);
+              return null;
+            }}
+          </Motion>
+        );
+      }
+    }
     renderIntoDocument(<App />);
 
     expect(count).toEqual([0]);
@@ -123,10 +130,12 @@ describe('Motion', () => {
   });
 
   it('should allow returning null from children function', () => {
-    const App = () => {
-      // shouldn't throw here
-      return <Motion style={{a: 0}}>{() => null}</Motion>;
-    };
+    class App extends Component {
+      render() {
+        // shouldn't throw here
+        return <Motion style={{a: 0}}>{() => null}</Motion>;
+      }
+    }
     renderIntoDocument(<App />);
   });
 
@@ -134,9 +143,12 @@ describe('Motion', () => {
     spyOn(console, 'error');
     let kill = () => {};
     class App extends Component {
-      constructor(props) {
-        super(props);
-        this.state = {kill: false};
+      constructor() {
+        super();
+
+        this.state = {
+          kill: false,
+        };
       }
       componentWillMount() {
         kill = () => this.setState({kill: true});
@@ -156,16 +168,18 @@ describe('Motion', () => {
 
   it('should allow a defaultStyle', () => {
     let count = [];
-    const App = () => {
-      return (
-        <Motion defaultStyle={{a: 0}} style={{a: spring(10)}}>
-          {({a}) => {
-            count.push(a);
-            return null;
-          }}
-        </Motion>
-      );
-    };
+    class App extends Component {
+      render() {
+        return (
+          <Motion defaultStyle={{a: 0}} style={{a: spring(10)}}>
+            {({a}) => {
+              count.push(a);
+              return null;
+            }}
+          </Motion>
+        );
+      }
+    }
     renderIntoDocument(<App />);
 
     expect(count).toEqual([0]);
@@ -181,18 +195,20 @@ describe('Motion', () => {
 
   it('should accept different spring configs', () => {
     let count = [];
-    const App = () => {
-      return (
-        <Motion
-            defaultStyle={{a: 0}}
-            style={{a: spring(10, {stiffness: 100, damping: 50, precision: 16})}}>
-          {({a}) => {
-            count.push(a);
-            return null;
-          }}
-        </Motion>
-      );
-    };
+    class App extends Component {
+      render() {
+        return (
+          <Motion
+              defaultStyle={{a: 0}}
+              style={{a: spring(10, {stiffness: 100, damping: 50, precision: 16})}}>
+            {({a}) => {
+              count.push(a);
+              return null;
+            }}
+          </Motion>
+        );
+      }
+    }
     renderIntoDocument(<App />);
 
     mockRaf.step(99);
@@ -211,18 +227,20 @@ describe('Motion', () => {
 
   it('should interpolate many values', () => {
     let count = [];
-    const App = () => {
-      return (
-        <Motion
-          defaultStyle={{a: 0, b: 10}}
-          style={{a: spring(10), b: spring(410)}}>
-          {({a, b}) => {
-            count.push([a, b]);
-            return null;
-          }}
-        </Motion>
-      );
-    };
+    class App extends Component {
+      render() {
+        return (
+          <Motion
+            defaultStyle={{a: 0, b: 10}}
+            style={{a: spring(10), b: spring(410)}}>
+            {({a, b}) => {
+              count.push([a, b]);
+              return null;
+            }}
+          </Motion>
+        );
+      }
+    }
 
     renderIntoDocument(<App />);
 
@@ -239,23 +257,25 @@ describe('Motion', () => {
 
   it('should work with nested Motions', () => {
     let count = [];
-    const App = () => {
-      return (
-        <Motion defaultStyle={{owner: 0}} style={{owner: spring(10)}}>
-          {({owner}) => {
-            count.push(owner);
-            return (
-              <Motion defaultStyle={{child: 10}} style={{child: spring(400)}}>
-                {({child}) => {
-                  count.push(child);
-                  return null;
-                }}
-              </Motion>
-            );
-          }}
-        </Motion>
-      );
-    };
+    class App extends Component {
+      render() {
+        return (
+          <Motion defaultStyle={{owner: 0}} style={{owner: spring(10)}}>
+            {({owner}) => {
+              count.push(owner);
+              return (
+                <Motion defaultStyle={{child: 10}} style={{child: spring(400)}}>
+                  {({child}) => {
+                    count.push(child);
+                    return null;
+                  }}
+                </Motion>
+              );
+            }}
+          </Motion>
+        );
+      }
+    }
     renderIntoDocument(<App />);
 
     expect(count).toEqual([0, 10]);
@@ -287,16 +307,18 @@ describe('Motion', () => {
 
   it('should reach destination value', () => {
     let count = [];
-    const App = () => {
-      return (
-        <Motion defaultStyle={{a: 0}} style={{a: spring(400)}}>
-          {({a}) => {
-            count.push(a);
-            return null;
-          }}
-        </Motion>
-      );
-    };
+    class App extends Component {
+      render() {
+        return (
+          <Motion defaultStyle={{a: 0}} style={{a: spring(400)}}>
+            {({a}) => {
+              count.push(a);
+              return null;
+            }}
+          </Motion>
+        );
+      }
+    }
     renderIntoDocument(<App />);
 
     expect(count).toEqual([0]);
@@ -316,9 +338,12 @@ describe('Motion', () => {
     let count = [];
     let setState = () => {};
     class App extends Component {
-      constructor(props) {
-        super(props);
-        this.state = {p: false};
+      constructor() {
+        super();
+
+        this.state = {
+          p: false,
+        };
       }
       componentWillMount() {
         setState = this.setState.bind(this);
@@ -366,22 +391,24 @@ describe('Motion', () => {
     const onRest = createSpy('onRest');
     let result = 0;
 
-    const App = () => {
-      return (
-        <Motion
-          defaultStyle={{a: 0}}
-          style={{a: spring(5, {stiffness: 380, damping: 18, precision: 1})}}
-          onRest={onRest}
-        >
-          {
-            ({a}) => {
-              result = a;
-              return null;
+    class App extends Component {
+      render() {
+        return (
+          <Motion
+            defaultStyle={{a: 0}}
+            style={{a: spring(5, {stiffness: 380, damping: 18, precision: 1})}}
+            onRest={onRest}
+          >
+            {
+              ({a}) => {
+                result = a;
+                return null;
+              }
             }
-          }
-        </Motion>
-      );
-    };
+          </Motion>
+        );
+      }
+    }
 
     renderIntoDocument(<App />);
 
@@ -397,26 +424,28 @@ describe('Motion', () => {
     let resultA = 0;
     let resultB = 0;
 
-    const App = () => {
-      return (
-        <Motion
-          defaultStyle={{a: 0, b: 0}}
-          style={{
-            a: spring(5, {stiffness: 380, damping: 18, precision: 1}),
-            b: spring(500, {stiffness: 380, damping: 18, precision: 1}),
-          }}
-          onRest={onRest}
-        >
-          {
-            ({a, b}) => {
-              resultA = a;
-              resultB = b;
-              return null;
+    class App extends Component {
+      render() {
+        return (
+          <Motion
+            defaultStyle={{a: 0, b: 0}}
+            style={{
+              a: spring(5, {stiffness: 380, damping: 18, precision: 1}),
+              b: spring(500, {stiffness: 380, damping: 18, precision: 1}),
+            }}
+            onRest={onRest}
+          >
+            {
+              ({a, b}) => {
+                resultA = a;
+                resultB = b;
+                return null;
+              }
             }
-          }
-        </Motion>
-      );
-    };
+          </Motion>
+        );
+      }
+    }
 
     renderIntoDocument(<App />);
 
@@ -434,9 +463,12 @@ describe('Motion', () => {
     let setState;
 
     class App extends Component {
-      constructor(props) {
-        super(props);
-        this.state = {a: spring(0)};
+      constructor() {
+        super();
+
+        this.state = {
+          a: spring(0),
+        };
       }
       componentWillMount() {
         setState = this.setState.bind(this);
@@ -466,9 +498,12 @@ describe('Motion', () => {
     let count = [];
     let setState = () => {};
     class App extends Component {
-      constructor(props) {
-        super(props);
-        this.state = {a: spring(0)};
+      constructor() {
+        super();
+
+        this.state = {
+          a: spring(0),
+        };
       }
       componentWillMount() {
         setState = this.setState.bind(this);

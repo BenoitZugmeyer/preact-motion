@@ -2,15 +2,14 @@ import { Component, h } from 'preact';
 import {TransitionMotion, spring} from '../../src';
 
 const leavingSpringConfig = {stiffness: 60, damping: 15};
-class Demo extends Component {
+
+export default class Demo extends Component {
   constructor(props) {
     super(props);
-    this.handleMouseMove = this.handleMouseMove.bind(this);
-    this.handleTouchMove = this.handleTouchMove.bind(this);
     this.state = {mouse: [], now: 't' + 0};
-  }
+  };
 
-  handleMouseMove({pageX, pageY}) {
+  handleMouseMove = ({pageX, pageY}) => {
     // Make sure the state is queued and not batched.
     this.setState(() => {
       return {
@@ -18,20 +17,20 @@ class Demo extends Component {
         now: 't' + Date.now(),
       };
     });
-  }
+  };
 
-  handleTouchMove(e) {
+  handleTouchMove = (e) => {
     e.preventDefault();
     this.handleMouseMove(e.touches[0]);
-  }
+  };
 
-  willLeave(styleCell) {
+  willLeave = (styleCell) => {
     return {
       ...styleCell.style,
       opacity: spring(0, leavingSpringConfig),
       scale: spring(2, leavingSpringConfig),
     };
-  }
+  };
 
   render() {
     const {mouse: [mouseX, mouseY], now} = this.state;
@@ -66,7 +65,5 @@ class Demo extends Component {
         }
       </TransitionMotion>
     );
-  }
+  };
 }
-
-export default Demo;

@@ -32,24 +32,27 @@ function shouldStopAnimationAll(
   return true;
 }
 
-class StaggeredMotion extends Component {
-
+export default class StaggeredMotion extends Component {
   static propTypes = {
     // TOOD: warn against putting a config in here
     defaultStyles: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.number)),
     styles: PropTypes.func.isRequired,
     // Preact TODO: check if it's an array containing a single function
-    // children: PropTypes.func.isRequired,
-  }
+  };
 
   state: StaggeredMotionState;
+  props: StaggeredProps;
 
   constructor(props: StaggeredProps) {
     super(props);
+    this.state = this.defaultState();
+  }
+
+  defaultState(): StaggeredMotionState {
     const {defaultStyles, styles} = this.props;
     const currentStyles: Array<PlainStyle> = defaultStyles || styles().map(stripStyle);
     const currentVelocities = currentStyles.map(currentStyle => mapToZero(currentStyle));
-    this.state = {
+    return {
       currentStyles,
       currentVelocities,
       lastIdealStyles: currentStyles,
@@ -57,7 +60,7 @@ class StaggeredMotion extends Component {
     };
   }
 
-  animationID = (null: ?number);
+  animationID: ?number = null;
   prevTime = 0;
   accumulatedTime = 0;
   // it's possible that currentStyle's value is stale: if props is immediately
@@ -65,11 +68,12 @@ class StaggeredMotion extends Component {
   // at 0 (didn't have time to tick and interpolate even once). If we naively
   // compare currentStyle with destVal it'll be 0 === 0 (no animation, stop).
   // In reality currentStyle should be 400
-  unreadPropStyles = (null: ?Array<Style>);
+  unreadPropStyles: ?Array<Style> = null;
+
   // after checking for unreadPropStyles != null, we manually go set the
   // non-interpolating values (those that are a number, without a spring
   // config)
-  clearUnreadPropStyle(unreadPropStyles: Array<Style>): void {
+  clearUnreadPropStyle = (unreadPropStyles: Array<Style>): void => {
     let {currentStyles, currentVelocities, lastIdealStyles, lastIdealVelocities} = this.state;
 
     let someDirty = false;
@@ -105,7 +109,7 @@ class StaggeredMotion extends Component {
     }
   }
 
-  startAnimationIfNecessary(): void {
+  startAnimationIfNecessary = (): void => {
     // TODO: when config is {a: 10} and dest is {a: 10} do we raf once and
     // call cb? No, otherwise accidental parent rerender causes cb trigger
     this.animationID = defaultRaf((timestamp) => {
@@ -113,10 +117,10 @@ class StaggeredMotion extends Component {
 
       // check if we need to animate in the first place
       if (shouldStopAnimationAll(
-        this.state.currentStyles,
-        destStyles,
-        this.state.currentVelocities,
-      )) {
+          this.state.currentStyles,
+          destStyles,
+          this.state.currentVelocities,
+        )) {
         // no need to cancel animationID here; shouldn't have any in flight
         this.animationID = null;
         this.accumulatedTime = 0;
@@ -253,5 +257,3 @@ class StaggeredMotion extends Component {
     return this.props.children[0](this.state.currentStyles);
   }
 }
-
-export default StaggeredMotion;

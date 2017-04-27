@@ -1,17 +1,9 @@
 import { Component, h } from 'preact';
 import {TransitionMotion, spring, presets} from '../../src';
 
-class Demo extends Component {
+export default class Demo extends Component {
   constructor(props) {
     super(props);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleDone = this.handleDone.bind(this);
-    this.handleToggleAll = this.handleToggleAll.bind(this);
-    this.handleSelect = this.handleSelect.bind(this);
-    this.handleClearCompleted = this.handleClearCompleted.bind(this);
-    this.handleDestroy = this.handleDestroy.bind(this);
-
     this.state = {
       todos: [
         // key is creation date
@@ -30,14 +22,14 @@ class Demo extends Component {
       value: '',
       selected: 'all',
     };
-  }
+  };
 
   // logic from todo, unrelated to animation
-  handleChange({target: {value}}) {
+  handleChange = ({target: {value}}) => {
     this.setState({value});
-  }
+  };
 
-  handleSubmit(e) {
+  handleSubmit = (e) => {
     e.preventDefault();
     const newItem = {
       key: 't' + Date.now(),
@@ -45,9 +37,9 @@ class Demo extends Component {
     };
     // append at head
     this.setState({todos: [newItem].concat(this.state.todos)});
-  }
+  };
 
-  handleDone(doneKey) {
+  handleDone = (doneKey) => {
     this.setState({
       todos: this.state.todos.map(todo => {
         const {key, data: {text, isDone}} = todo;
@@ -56,35 +48,35 @@ class Demo extends Component {
           : todo;
       }),
     });
-  }
+  };
 
-  handleToggleAll() {
+  handleToggleAll = () => {
     const allNotDone = this.state.todos.every(({data}) => data.isDone);
     this.setState({
       todos: this.state.todos.map(({key, data: {text, isDone}}) => (
         {key: key, data: {text: text, isDone: !allNotDone}}
       )),
     });
-  }
+  };
 
-  handleSelect(selected) {
+  handleSelect = (selected) => {
     this.setState({selected});
-  }
+  };
 
-  handleClearCompleted() {
+  handleClearCompleted = () => {
     this.setState({todos: this.state.todos.filter(({data}) => !data.isDone)});
-  }
+  };
 
-  handleDestroy(date) {
+  handleDestroy = (date) => {
     this.setState({todos: this.state.todos.filter(({key}) => key !== date)});
-  }
+  };
 
   // actual animation-related logic
-  getDefaultStyles() {
+  getDefaultStyles = () => {
     return this.state.todos.map(todo => ({...todo, style: {height: 0, opacity: 1}}));
-  }
+  };
 
-  getStyles() {
+  getStyles = () => {
     const {todos, value, selected} = this.state;
     return todos.filter(({data: {isDone, text}}) => {
       return text.toUpperCase().indexOf(value.toUpperCase()) >= 0 &&
@@ -101,21 +93,21 @@ class Demo extends Component {
         }
       };
     });
-  }
+  };
 
   willEnter() {
     return {
       height: 0,
       opacity: 1,
     };
-  }
+  };
 
   willLeave() {
     return {
       height: spring(0),
       opacity: spring(0),
     };
-  }
+  };
 
   render() {
     const {todos, value, selected} = this.state;
@@ -203,7 +195,5 @@ class Demo extends Component {
         </footer>
       </section>
     );
-  }
+  };
 }
-
-export default Demo;

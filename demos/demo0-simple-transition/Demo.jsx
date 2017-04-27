@@ -1,22 +1,20 @@
 import { Component, h } from 'preact';
 import {Motion, spring} from '../../src';
 
-class Demo extends Component {
+export default class Demo extends Component {
   constructor(props) {
-    super(props)
-    this.handleMouseDown = this.handleMouseDown.bind(this);
-    this.handleTouchStart = this.handleTouchStart.bind(this);
+    super(props);
     this.state = {open: false};
-  }
+  };
 
-  handleMouseDown() {
+  handleMouseDown = () => {
     this.setState({open: !this.state.open});
-  }
+  };
 
-  handleTouchStart(e) {
+  handleTouchStart = (e) => {
     e.preventDefault();
     this.handleMouseDown();
-  }
+  };
 
   render() {
     return (
@@ -41,7 +39,5 @@ class Demo extends Component {
         </Motion>
       </div>
     );
-  }
+  };
 }
-
-export default Demo;

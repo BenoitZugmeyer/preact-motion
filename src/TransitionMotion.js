@@ -169,6 +169,12 @@ function mergeAndSync(
   return [newMergedPropsStyles, newCurrentStyles, newCurrentVelocities, newLastIdealStyles, newLastIdealVelocities];
 }
 
+type TransitionMotionDefaultProps = {
+  willEnter: WillEnter,
+  willLeave: WillLeave,
+  didLeave: DidLeave
+}
+
 type TransitionMotionState = {
   // list of styles, each containing interpolating values. Part of what's passed
   // to children function. Notice that this is
@@ -186,7 +192,7 @@ type TransitionMotionState = {
   mergedPropsStyles: Array<TransitionStyle>,
 };
 
-class TransitionMotion extends Component {
+export default class TransitionMotion extends Component {
   static propTypes = {
     defaultStyles: PropTypes.arrayOf(PropTypes.shape({
       key: PropTypes.string.isRequired,
@@ -203,7 +209,7 @@ class TransitionMotion extends Component {
           PropTypes.object,
         ])).isRequired,
       }),
-    )]).isRequired,
+      )]).isRequired,
     // Preact TODO: check if it's an array containing a single function
     // children: PropTypes.func.isRequired,
     willEnter: PropTypes.func,
@@ -211,7 +217,7 @@ class TransitionMotion extends Component {
     didLeave: PropTypes.func,
   };
 
-  static defaultProps: {willEnter: WillEnter, willLeave: WillLeave, didLeave: DidLeave} = {
+  static defaultProps: TransitionMotionDefaultProps = {
     willEnter: styleThatEntered => stripStyle(styleThatEntered.style),
     // recall: returning null makes the current unmounting TransitionStyle
     // disappear immediately
@@ -220,9 +226,25 @@ class TransitionMotion extends Component {
   };
 
   state: TransitionMotionState;
+  props: TransitionProps;
+
+  unmounting: boolean = false;
+  animationID: ?number = null;
+  prevTime = 0;
+  accumulatedTime = 0;
+  // it's possible that currentStyle's value is stale: if props is immediately
+  // changed from 0 to 400 to spring(0) again, the async currentStyle is still
+  // at 0 (didn't have time to tick and interpolate even once). If we naively
+  // compare currentStyle with destVal it'll be 0 === 0 (no animation, stop).
+  // In reality currentStyle should be 400
+  unreadPropStyles: ?Array<TransitionStyle> = null;
 
   constructor(props: TransitionProps) {
     super(props);
+    this.state = this.defaultState();
+  }
+
+  defaultState(): TransitionMotionState {
     const {defaultStyles, styles, willEnter, willLeave, didLeave} = this.props;
     const destStyles: Array<TransitionStyle> = typeof styles === 'function' ? styles(defaultStyles) : styles;
 
@@ -265,7 +287,7 @@ class TransitionMotion extends Component {
       oldCurrentVelocities, // oldLastIdealVelocities really
     );
 
-    this.state = {
+    return {
       currentStyles,
       currentVelocities,
       lastIdealStyles,
@@ -274,20 +296,10 @@ class TransitionMotion extends Component {
     };
   }
 
-  unmounting = (false: boolean);
-  animationID = (null: ?number);
-  prevTime = 0;
-  accumulatedTime = 0;
-  // it's possible that currentStyle's value is stale: if props is immediately
-  // changed from 0 to 400 to spring(0) again, the async currentStyle is still
-  // at 0 (didn't have time to tick and interpolate even once). If we naively
-  // compare currentStyle with destVal it'll be 0 === 0 (no animation, stop).
-  // In reality currentStyle should be 400
-  unreadPropStyles = (null: ?Array<TransitionStyle>);
   // after checking for unreadPropStyles != null, we manually go set the
   // non-interpolating values (those that are a number, without a spring
   // config)
-  clearUnreadPropStyle(unreadPropStyles: Array<TransitionStyle>): void {
+  clearUnreadPropStyle = (unreadPropStyles: Array<TransitionStyle>): void => {
     let [mergedPropsStyles, currentStyles, currentVelocities, lastIdealStyles, lastIdealVelocities] = mergeAndSync(
       (this.props.willEnter: any),
       (this.props.willLeave: any),
@@ -344,7 +356,7 @@ class TransitionMotion extends Component {
     });
   }
 
-  startAnimationIfNecessary(): void {
+  startAnimationIfNecessary = (): void => {
     if (this.unmounting) {
       return;
     }
@@ -372,11 +384,11 @@ class TransitionMotion extends Component {
 
       // check if we need to animate in the first place
       if (shouldStopAnimationAll(
-        this.state.currentStyles,
-        destStyles,
-        this.state.currentVelocities,
-        this.state.mergedPropsStyles,
-      )) {
+          this.state.currentStyles,
+          destStyles,
+          this.state.currentVelocities,
+          this.state.mergedPropsStyles,
+        )) {
         // no need to cancel animationID here; shouldn't have any in flight
         this.animationID = null;
         this.accumulatedTime = 0;
@@ -539,4 +551,3 @@ class TransitionMotion extends Component {
   }
 }
 
-export default TransitionMotion;
