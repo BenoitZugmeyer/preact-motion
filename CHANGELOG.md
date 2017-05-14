@@ -1,3 +1,6 @@
+2017-05-14 v1.1.0 (react-motion v0.5.0)
+* upgrade to react-motion v0.5.0
+
 2017-04-23 v1.0.1 (react-motion v0.4.8)
 * always expose an unoptimized bundle when using via NPM
 
