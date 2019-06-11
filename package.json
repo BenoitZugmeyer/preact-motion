@@ -1,6 +1,6 @@
 {
   "name": "preact-motion",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "A fork of React-Motion to be used with Preact.",
   "main": "build/preact-motion.js",
   "jsnext:main": "build/preact-motion.es.js",
