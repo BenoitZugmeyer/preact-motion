@@ -1,3 +1,8 @@
+# Deprecation warning
+
+Most of the changes are now present in react-motion.  Just use `preact-compat` and everything should
+work out of the box.  This module won't be maintained anymore.
+
 # Preact-Motion
 
 [![Build Status](https://travis-ci.org/BenoitZugmeyer/preact-motion.svg?branch=master)](https://travis-ci.org/BenoitZugmeyer/preact-motion)
